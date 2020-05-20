@@ -5,6 +5,8 @@ import glob
 import pandas as pd 
 import textgrids
 import numpy as np
+import numba 
+from numba import jit
 
 
 #functions for getting data from original folder with all of the audio data 
@@ -119,10 +121,88 @@ def split_and_name_textgrids(original_folder = "/original_en_diapix_data_changed
         chan1.to_csv(cwd + '/' + destination_folder + '/' + channel1 + ".TextGrid")
         chan2.to_csv(cwd + '/' + destination_folder + '/' + channel2 + ".TextGrid")
 
-# functions for adding to the dataframes
+# functions for adding features to the dataframes
+def add_vowel_col(df, df_list):
+    unique_phone_list = []
+    for df in df_list:
+        for item in df['Phone_Text'].unique():
+            if item not in unique_phone_list:
+                unique_phone_list.append(item)
+    ortho_vowels = ['a', 'e', 'i', 'o', 'u']
+    vowels = [x for x in unique_phone_list if str(x)[0].lower() in ortho_vowels]
+    vowel_col = []
+    for item in df['Phone_Text']:
+        if item in vowels:
+            vowel_col.append(1)
+        else:
+            vowel_col.append(0)
+    df['Vowel'] = vowel_col
+    return df
 
-# functions for downsampling data
+def add_phone_duration_feature(df):
+    df['Phone_Duration'] = np.where((df['Phone_xmax'] - df['Phone_xmin']) > 0, 
+                                     (df['Phone_xmax'] - df['Phone_xmin']),
+                                     np.nan)
+    return df
+
+def add_cols_to_dfs(df_list, textgrid_names_list):
+    new_df_list = []
+    for index, df in enumerate(df_list):
+        df['Speaker'] = textgrid_names_list[index][-10:-8]
+        df = add_vowel_col(df, df_list)
+        df = add_phone_duration_feature(df)
+        new_df_list.append(df)
+    return new_df_list
 
 # functions for hampel filter 
+@jit(nopython=True)
+def hampel_filter_forloop_numba(input_series, window_size, n_sigmas=3):
+    n = len(input_series)
+    new_series = input_series.copy()
+    k = 1.4826 # scale factor for Gaussian distribution
+    indices = []
+    for i in range((window_size),(n - window_size)):
+        x0 = np.nanmedian(input_series[(i - window_size):(i + window_size)])
+        S0 = k * np.nanmedian(np.abs(input_series[(i - window_size):(i + window_size)] - x0))
+        if (np.abs(input_series[i] - x0) > n_sigmas * S0):
+            new_series[i] = x0
+            indices.append(i)
+    return new_series, indices
+
+def chunk_vowels_to_sr(df):
+    vowel_indices = []
+    for x in range(len(df)):
+        xmin = int(round(df['Phone_xmin'][x] * 8000))
+        xmax = int(round(df['Phone_xmax'][x] * 8000))
+        index_range = range(xmin, (xmax + 1))
+        for x in index_range:
+            vowel_indices.append(x)
+    return vowel_indices
+
+# functions for calculating metrics of hampel filter 
+def make_results_into_binary(indices_that_passed_filter, number_of_possible_samples_in_file = 720000):
+    binary_indices = np.zeros(number_of_possible_samples_in_file)
+    for x in indices_that_passed_filter:
+        binary_indices[x] = 1
+    return binary_indices
+
+def count_samples_that_passed_filter(binary_indices):
+    nonzero_indices = binary_indices.nonzero()
+    count = len(list(nonzero_indices[0]))
+    return count
+
+def calculate_metrics(filter_binary_indices, vowel_indices_binary):
+    metric_dictionary = {"F1_score": f1_score(vowel_indices_binary, filter_binary_indices),
+                         "Recall": recall_score(vowel_indices_binary, filter_binary_indices),
+                         "Precision": precision_score(vowel_indices_binary, filter_binary_indices)}
+    return metric_dictionary
+
+def use_filter_and_calculate_metrics(window_size, n_sigmas, audio):
+    new_series, indices = hampel_filter_forloop_numba(audio, window_size, n_sigmas)
+    binary_indices = make_results_into_binary(indices)
+    metric_dictionary = calculate_metrics(binary_indices)
+    return metric_dictionary
+
+
         
       
