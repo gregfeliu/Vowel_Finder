@@ -7,6 +7,7 @@ import textgrids
 import numpy as np
 import numba 
 from numba import jit
+from sklearn.metrics import recall_score, precision_score, f1_score
 
 
 #functions for getting data from original folder with all of the audio data 
@@ -21,12 +22,6 @@ def get_file_names(file_name):
     if a[1] != a[0]:
         channel2 = a[1]
     return channel1, channel2
-
-# def create_directory_move_file(file_to_be_moved, subdirectory_name = "subdirectory_name"):
-#     cwd = os.getcwd()
-#     os.mkdir(subdirectory_name)
-#     for item in file_to_be_moved:
-#         os.replace(cwd + '/' + item, cwd + '/' + subdirectory_name + '/' + item)
         
 def split_save_wav(wav_file_list):
     cwd = os.getcwd()
@@ -203,6 +198,31 @@ def use_filter_and_calculate_metrics(window_size, n_sigmas, audio):
     metric_dictionary = calculate_metrics(binary_indices)
     return metric_dictionary
 
+def make_sample_rates_match(hampel_filter_indices, new_sr, number_of_target_samples, hampel_filter_sr=8000):
+    return_list = []
+    predictions_in_seconds = np.array(hampel_filter_indices) / hampel_filter_sr
+    num_of_possible_hamp_filter_indices = hampel_filter_sr / new_sr
+    for x in range(0, number_of_target_samples):
+        beg_range = x / new_sr
+        end_range = (x+1) / new_sr
+        range_list = np.where(np.logical_and(predictions_in_seconds >= beg_range, 
+                                             predictions_in_seconds <= end_range), 1, 0)
+        sum_range_list = range_list.sum()
+        percent_passing_filter = sum_range_list / num_of_possible_hamp_filter_indices
+        return_list.append(round(percent_passing_filter, 2))
+    return return_list
 
+def find_metrics(test, pred, dictionary, model_name="model"): # for classification models
+    the_f1_score = round(f1_score(test, pred), 3)
+    the_recall_score = round(recall_score(test, pred), 3)
+    the_precision_score = round(precision_score(test, pred), 3)
+    print(f"""      
+        The f1 score is {the_f1_score}. \n
+        The recall_score is {the_recall_score}. \n
+        The precision is {the_precision_score}. """)
+    return_values = {"f1_score": the_f1_score, "recall_score": the_recall_score, 
+                     "precision_score" : the_precision_score}
+    dictionary[model_name] = return_values
+    return dictionary
         
       
