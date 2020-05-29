@@ -13,6 +13,8 @@ I investigate the effectiveness of three different approaches in this project:
 ## Results
 The Neural Network model and Combination model both performed equally well. The Hampel Filter had a significantly lower effectiveness than the other two approaches. Since there is little if any gain from using a combination model, a 2D neural network is the best approach used here.
 
+The results are presented in a [deck](https://docs.google.com/presentation/d/1E3h6cjbQvKEGE3kDF8XS36_IW0HKgu7hBuGMthUwPsc/edit?usp=sharing) that was presented as part of the Flatiron Bootcamp's Science Fair.
+
 ## Technologies Used
 - Jupyter Notebook
 - Python
@@ -28,7 +30,7 @@ The Neural Network model and Combination model both performed equally well. The 
     - Matplotlib
     - Plotly
     - Keras
-    - SKlearn
+    - scikit-learn
 
 ## Future Directions
 This project was a first attempt at finding the most successful approach to finding a specific class of speech sounds acoustically. There are two areas of improvement: the phonetic side, and the data science side.
