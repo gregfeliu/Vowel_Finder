@@ -7,11 +7,19 @@ The data originally came from a [study](http://groups.linguistics.northwestern.e
 
 I investigate the effectiveness of four different approaches in this project: 
 - **[Hampel Filter](https://dsp.stackexchange.com/questions/26552/what-is-a-hampel-filter-and-how-does-it-work)**: One finds the median volume of a small section of the audio file, and determines if the sample in question is above a threshold of standard deviations of that median volume. 
-- **Neural Network**: Feeds the model frames of vowels and performs a 2D vanilla neural network to find vowels in the test data.
-- **Combination Model**: This model combines the results of the previous two models to hopefully obtain more accurate predictions.
-- **Ensemble Learning Algorithm (Random Forest and Bagging Classifier)**: These models use decision trees on samples of the data and then uses the values that distinguish those data points on the rest of the data. The difference between the two is that of all the features that are found, the Random Forest algorithm considers all in tandem whereas the Bagging Classifier considers each one individually, and then uses majority voting to determine the final prediction. 
+- **Neural Network**: Feeds the model frames of vowels and performs a 2D vanilla neural network to find vowels in the test data. The datapoints were the energy levels at each of the 13 MFCC bands.
+- **Combination Model**: This model combines the results of the previous two models to hopefully obtain more accurate predicions.
+- **Ensemble Learning Methods**: These methods [combine the decisions from multiple models to make predictions](https://towardsdatascience.com/simple-guide-for-ensemble-learning-methods-d87cc68705a2). I tested the effectiveness of multiple types of ensemble learning methods:
+    1. _Bagging Methods_: These methods take random samples from the data, build a model for each sample, and combine the results into a single vote for that data point. Of these, I used sklearn.ensemble.RandomForestClassifier, sklearn.ensemble.BaggingClassifier, imblearn.ensemble.BalancedRandomForestClassifier, and imblearn.ensemble.BalancedBaggingClassifier.
+    2. _Boosting Methods_: These methods sequentially build the model by running an algorithm on all the data and using the residuals of that algorithm to improve on each data point. In this project, I used imblearn.ensemble.EasyEnsembleClassifier.
+The data fed to each of the ensemble methods included each of the energy levels at each of the 13 MFCC bands plus the percent of the samples that passed the Hampel Filter at a 200 ms sample rate. 
 
 ## Results
+
+SHOW TOP MODELS 
+DISCUSS RESULTS 
+
+
 The Neural Network model and Combination model both performed equally well. The Hampel Filter had a significantly lower effectiveness than the other two approaches. Since there is little if any gain from using a combination model, a 2D neural network is the best approach used here.
 
 The results are presented in a [deck](https://docs.google.com/presentation/d/1E3h6cjbQvKEGE3kDF8XS36_IW0HKgu7hBuGMthUwPsc/edit?usp=sharing) that was presented as part of the Flatiron Bootcamp's Science Fair.
@@ -32,6 +40,7 @@ The results are presented in a [deck](https://docs.google.com/presentation/d/1E3
     - Plotly
     - Keras
     - scikit-learn
+    - imblearn
 
 ## Future Directions
 This project was a first attempt at finding the most successful approach to finding a specific class of speech sounds acoustically. There are two areas of improvement: the phonetic side, and the data science side.
