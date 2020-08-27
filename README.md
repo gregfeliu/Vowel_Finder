@@ -21,9 +21,7 @@ Overall, the Ensemble Learning Methods outperformed the neural networks/combinat
 
 ![Visualization of Best Models](./Performance_of_models.png)
 
-The best performing model was a balanced bagging model. It had an F1 Score of 0.751, having better recall than precision. In other words, it overpredicted vowels but found 87.5% of all the vowels present in the data. If one is concerned about only predicting vowels, then a random forest model is the best option, with a precision score of 76.4% (both the third and fifth random forest models had this score). 
-
-
+The best performing model was a balanced bagging model. It had an F1 Score of 0.751, having better recall than precision. In other words, it overpredicted vowels but found 87.5% of all the vowels present in the data. If one is concerned about only predicting vowels, then a random forest model is the best option, with a precision score of 76.4% (both the third and fifth random forest models had this score). \
 
 The Neural Network model and Combination model both performed equally well.  Since there is little if any gain from using a combination model, a 2D neural network is the better approach of the two. The Hampel Filter had a significantly lower effectiveness than the other two approaches. The original results (not using ensemble methods) are presented in a [deck](https://docs.google.com/presentation/d/1E3h6cjbQvKEGE3kDF8XS36_IW0HKgu7hBuGMthUwPsc/edit?usp=sharing) that was originally presented as part of the Flatiron Bootcamp's Science Fair.
 
