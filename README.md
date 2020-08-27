@@ -15,10 +15,11 @@ I investigate the effectiveness of four different approaches in this project:
 The data fed to each of the ensemble methods included each of the energy levels at each of the 13 MFCC bands plus the percent of the samples that passed the Hampel Filter at a 200 ms sample rate. 
 
 ## Results
+Overall, the Ensemble Learning Methods outperformed the neural networks/combination models and the Hampel Filter was the worst performing of the four general approaches tried. While the Hampel Filter provided data for the Ensemble Learning Methods and Combination Models, it didn't improve the Combination Models but involved much more computation (the difference in performance for the Ensemble Learning Methods wasn't tested). It's very clear that the Ensemble Learning Methods are the best performing option for this data. 
 
-SHOW TOP MODELS 
-DISCUSS RESULTS 
+![Visualization of Best Models](./Performance_of_models.png)
 
+The best performing model was a balanced bagging model. It had an F1 Score of 0.751, having better recall than precision. In other words, it overpredicted vowels but found 87.5% of all the vowels present in the data. If one is concerned about only predicting vowels, then a random forest model is the best option, with a precision score of 76.4% (both the third and fifth random forest models had this score). 
 
 The Neural Network model and Combination model both performed equally well. The Hampel Filter had a significantly lower effectiveness than the other two approaches. Since there is little if any gain from using a combination model, a 2D neural network is the best approach used here.
 
