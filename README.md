@@ -19,7 +19,7 @@ I investigate the effectiveness of four different approaches on the given data:
 ## Results
 Overall, the Ensemble Learning Methods outperformed the neural networks/combination models and the Hampel Filter was the worst performing of the four general approaches tried. While the Hampel Filter provided data for the Ensemble Learning Methods and Combination Models, it didn't improve the Combination Models but involved much more computation (the difference in performance for the Ensemble Learning Methods wasn't tested). It's clear that the Ensemble Learning Methods are the best performing approach for this data. 
 
-![Visualization of Best Models](./Performance_of_models.png)
+![Visualization of Best Models](./images/Performance_of_models.png)
 
 The best performing model was a balanced bagging model (labelled "third_bagging_model"). It had an F1 Score of 0.751, having better recall than precision. In other words, it overpredicted vowels but found 87.5% of all the vowels present in the data. If one is concerned about only predicting vowels, then a random forest model is the best option, with a precision score of 76.4% (both the third and fifth random forest models had this score). \
 
