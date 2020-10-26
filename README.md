@@ -1,7 +1,7 @@
 # Vowel Finder 
 
 ## Description
-This was my final project at Flatiron Data Science Bootcamp. Here, **I aim to find all acoustic vowels in an unmarked audio file of natural conversational speech**. Uses cases for this project include:
+This was my final project at Flatiron Data Science Bootcamp. Here, **I aim to find all acoustic vowels in an unmarked audio file of natural conversational speech**. Use cases for this project include:
 - Start building an Automatic Speech Recognition system
 - Identify languages (after segmenting and measuring component frequencies of the vowels used)
 - Phonetic research (would greatly reduce human effort needed to segment vowels from speech)
