@@ -2,8 +2,8 @@
 
 ## Description
 This was my final project at Flatiron Data Science Bootcamp. Here, **I aim to find all acoustic vowels in an unmarked audio file of natural conversational speech**. Use cases for this project include:
-- Start building an Automatic Speech Recognition system
-- Identify languages (after segmenting and measuring component frequencies of the vowels used)
+- Starting step for building an Automatic Speech Recognition system
+- Language Identification (after segmenting and measuring component frequencies of the vowels used)
 - Phonetic research (would greatly reduce human effort needed to segment vowels from speech)
 
 The data originally came from a [study](http://groups.linguistics.northwestern.edu/speech_comm_group/wildcat/) done by Northwestern University Linguistics Department. The [transcriptions](https://speechbox.linguistics.northwestern.edu/wildcat/#!/recordings) were auto-aligned from transcriptions and hand corrected by the studies' authors. Unfortunately, the quality of the annotations were not sufficient, so I corrected one, 10-minute interview. The reason corrections were needed is that they were annotated at the _word_ level, and not the _acoustic_ level. For example, the first _e_ in "interesting" is often acoustically absent (there is a "chr" sound, not "ter"). In the original transcription the "e" sound is marked, even if not actually present.
